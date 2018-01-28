@@ -1,20 +1,102 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value, myForm.valid)">
+    <!-- We'll add our form controls here -->
 
+    <!--name-->
+    <div>
+        <label>Name</label>
+        <input type="text" formControlName="name">
+    </div>
+
+    <!--payment method-->
+    <div>
+        <label>Payment Method</label>
+    </div>
+
+    <div formGroupName="paymentMethod">
+
+        <!--payment method type button-->
+        <div class="row">
+            <div class="col-xs-6">
+                <button type="button" (click)="setPaymentMethodType(PAYMENT_METHOD_TYPE.BANK)">
+                {{ PAYMENT_METHOD_TYPE.BANK }}
+                </button>
+            </div>
+            <div class="col-xs-6">
+                <button type="button" (click)="setPaymentMethodType(PAYMENT_METHOD_TYPE.CARD)">
+                {{ PAYMENT_METHOD_TYPE.CARD }}
+                </button>
+            </div>
+        </div>
+
+        <!--payment method: BANK-->
+        <div *ngIf="myForm.controls.paymentMethod.controls.type.value === PAYMENT_METHOD_TYPE.BANK">
+            <div class="panel-body">
+
+                <!--Bank account no-->
+                <div formGroupName="bank">
+                    <label>Account no.</label>
+                    <input type="text" formControlName="accountNo">
+                    <small *ngIf="!myForm.controls.paymentMethod.controls.bank.controls.accountNo.valid">
+                    Required.
+                    </small>
+                </div>
+
+                <!--Bank routing no-->
+                <div formGroupName="bank">
+                    <label>Routing no.</label>
+                    <input type="text" formControlName="routingNo">
+                    <small *ngIf="!myForm.controls.paymentMethod.controls.bank.controls.routingNo.valid">
+                    Required.
+                    </small>
+                </div>
+
+                <!--Bank account holder-->
+                <div formGroupName="bank">
+                    <label>Name</label>
+                    <input type="text" formControlName="accountHolder">
+                    <small *ngIf="!myForm.controls.paymentMethod.controls.bank.controls.accountHolder.valid">
+                    Required.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!--payment method: CARD-->
+        <div *ngIf="myForm.controls.paymentMethod.controls.type.value === PAYMENT_METHOD_TYPE.CARD">
+            <div class="panel-body">
+
+                <!--Card no-->
+                <div formGroupName="card">
+                    <label>Card no.</label>
+                    <input type="text" formControlName="cardNo">
+                    <small *ngIf="!myForm.controls.paymentMethod.controls.card.controls.cardNo.valid">
+                    Required (Must be valid card number).
+                    </small>
+                </div>
+
+                <!--Card expiry-->
+                <div formGroupName="card">
+                    <label>Expiry</label>
+                    <input type="text" formControlName="expiry">
+                    <small *ngIf="!myForm.controls.paymentMethod.controls.card.controls.expiry.valid" class="text-danger">
+                    Required (Must be in format MM/YY).
+                    </small>
+                </div>
+
+                <!--Card holder-->
+                <div formGroupName="card">
+                    <label>Name</label>
+                    <input type="text" formControlName="cardHolder">
+                    <small *ngIf="!myForm.controls.paymentMethod.controls.card.controls.cardHolder.valid">
+                    Required.
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <button type="submit" [disabled]="!myForm.valid">Submit</button>
+    </div>
+</form>
